@@ -1,51 +1,47 @@
 <?php
 
-
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Ekskul;
-use App\Models\Registrant;
 
 class EkskulController extends Controller
 {
-    /**
-     * Menampilkan Dashboard Admin
-     */
     public function index()
     {
-        // 1. Ambil data pendaftar beserta relasi ekskul yang dipilih
-        // 'with' digunakan agar query lebih ringan (eager loading)
-        // 'latest' agar pendaftar terbaru muncul di atas
-        $registrants = Registrant::with('ekskul')->latest()->get();
-
-        // 2. Kirim data tersebut ke view 'home'
-        return view('home', compact('registrants'));
+        $ekskuls = Ekskul::all();
+        return view('admin.ekskul.index', compact('ekskuls'));
     }
 
-    /**
-     * Menyimpan Data Ekskul Baru
-     */
     public function store(Request $request)
     {
-        // Validasi input admin
         $request->validate([
-            'nama' => 'required|string|max:255',
-            'deskripsi' => 'required|string',
-            'jadwal' => 'required|string',
+            'nama' => 'required',
+            'deskripsi' => 'required',
+            'jadwal' => 'required',
         ]);
 
-        // Simpan ke database
-        Ekskul::create([
-            'nama' => $request->nama,
-            'deskripsi' => $request->deskripsi,
-            'jadwal' => $request->jadwal,
-            // Jika ingin menambahkan gambar default atau null
-            'gambar' => null
-        ]);
+        Ekskul::create($request->all());
+        return back()->with('success', 'Ekskul berhasil ditambahkan!');
+    }
 
-        // Kembali ke halaman dashboard dengan pesan sukses
-        return redirect()->route('admin.dashboard')->with('status', 'Ekskul berhasil ditambahkan!');
+    public function edit($id)
+    {
+        $ekskul = Ekskul::findOrFail($id);
+        return view('admin.ekskul.edit', compact('ekskul'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $ekskul = Ekskul::findOrFail($id);
+        $ekskul->update($request->all());
+        return redirect()->route('admin.ekskul.index')->with('success', 'Ekskul berhasil diupdate!');
+    }
+
+    public function destroy($id)
+    {
+        Ekskul::findOrFail($id)->delete();
+        return back()->with('success', 'Ekskul berhasil dihapus!');
     }
 }
