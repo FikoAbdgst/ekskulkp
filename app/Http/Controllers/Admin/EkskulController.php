@@ -10,6 +10,8 @@ class EkskulController extends Controller
 {
     public function index()
     {
+        // Mengambil semua data ekskul
+        // Kita keyBy('id') agar nanti di JS mudah diambil berdasarkan ID
         $ekskuls = Ekskul::all();
         return view('admin.ekskul.index', compact('ekskuls'));
     }
@@ -30,11 +32,7 @@ class EkskulController extends Controller
         return back()->with('success', 'Ekskul berhasil ditambahkan!');
     }
 
-    public function edit($id)
-    {
-        $ekskul = Ekskul::findOrFail($id);
-        return view('admin.ekskul.edit', compact('ekskul'));
-    }
+    // Method edit() DIHAPUS saja karena sudah pakai Modal
 
     public function update(Request $request, $id)
     {

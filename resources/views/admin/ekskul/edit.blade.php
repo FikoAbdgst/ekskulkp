@@ -2,8 +2,16 @@
 @section('page-title', 'Edit Ekskul')
 
 @section('content')
+    {{-- DEFINISI LIST ICON EKSKUL (SAMA DENGAN INDEX) --}}
+    @php
+        $icons = [
+            'Olahraga' => ['⚽', '🏀', '🏐', '🏸', '🏓', '🎾', '🏊', '🥋', '🥊', '🏹', '🛹', '🏃'],
+            'Seni & Musik' => ['🎨', '🎭', '🎸', '🎹', '🎻', '🥁', '🎤', '🎺', '💃', '📸', '🎬'],
+            'Organisasi & Akademik' => ['⚜️', '⛑️', '🚩', '🕌', '✝️', '♟️', '📚', '💻', '🤖', '🍳', '🌱', '🗣️'],
+        ];
+    @endphp
+
     <style>
-        /* Gunakan style yang sama atau copy dari index jika perlu */
         .edit-card {
             background: white;
             border-radius: 24px;
@@ -28,6 +36,64 @@
             width: 100%;
             margin-top: 20px;
         }
+
+        /* Style Icon Grid (Sama dengan Index) */
+        .icon-selector-wrapper {
+            max-height: 250px;
+            overflow-y: auto;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 15px;
+            background: #f8fafc;
+        }
+
+        .icon-category-title {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #94a3b8;
+            text-transform: uppercase;
+            margin: 10px 0 5px;
+        }
+
+        .icon-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(45px, 1fr));
+            gap: 10px;
+        }
+
+        .icon-radio {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .icon-label {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 45px;
+            font-size: 1.5rem;
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+
+        .icon-label:hover {
+            background: #eff6ff;
+            border-color: #bfdbfe;
+        }
+
+        .icon-radio:checked+.icon-label {
+            background: #10b981;
+            /* Warna hijau untuk edit menandakan save */
+            color: white;
+            border-color: #10b981;
+            transform: scale(1.05);
+            box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3);
+        }
     </style>
 
     <div class="edit-card">
@@ -43,18 +109,29 @@
                             value="{{ $ekskul->nama }}" required>
                     </div>
 
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <label class="fw-bold mb-2">Icon / Emoji</label>
-                            {{-- Value langsung diambil tanpa prefix bi- --}}
-                            <input type="text" name="icon" id="inputIcon" class="form-control form-control-custom"
-                                value="{{ $ekskul->icon }}" required>
+                    <div class="mb-3">
+                        <label class="fw-bold mb-2">Icon / Emoji</label>
+                        <div class="icon-selector-wrapper">
+                            @foreach ($icons as $category => $emojis)
+                                <div class="icon-category-title">{{ $category }}</div>
+                                <div class="icon-grid">
+                                    @foreach ($emojis as $emoji)
+                                        <label class="position-relative">
+                                            {{-- Cek apakah emoji ini sama dengan yang di database --}}
+                                            <input type="radio" name="icon" value="{{ $emoji }}"
+                                                class="icon-radio" {{ $ekskul->icon == $emoji ? 'checked' : '' }}>
+                                            <div class="icon-label">{{ $emoji }}</div>
+                                        </label>
+                                    @endforeach
+                                </div>
+                            @endforeach
                         </div>
-                        <div class="col-md-6">
-                            <label class="fw-bold mb-2">Warna</label>
-                            <input type="color" name="warna" id="inputWarna"
-                                class="form-control form-control-color w-100" value="{{ $ekskul->warna }}">
-                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="fw-bold mb-2">Warna</label>
+                        <input type="color" name="warna" id="inputWarna" class="form-control form-control-color w-100"
+                            value="{{ $ekskul->warna }}">
                     </div>
 
                     <div class="row mb-3">
@@ -121,11 +198,10 @@
     </div>
 
     <script>
-        // Script yang sama untuk update live preview
         document.addEventListener('DOMContentLoaded', function() {
             const inputs = {
                 nama: document.getElementById('inputNama'),
-                icon: document.getElementById('inputIcon'),
+                // Icon handle by radios
                 warna: document.getElementById('inputWarna'),
                 hari: document.getElementById('inputHari'),
                 mulai: document.getElementById('inputMulai'),
@@ -142,14 +218,28 @@
 
             function updatePreview() {
                 previews.nama.textContent = inputs.nama.value;
-                previews.icon.textContent = inputs.icon.value;
+
+                // Ambil selected radio
+                const selectedIcon = document.querySelector('input[name="icon"]:checked');
+                if (selectedIcon) {
+                    previews.icon.textContent = selectedIcon.value;
+                }
+
                 previews.iconBox.style.background = inputs.warna.value;
                 previews.jadwal.textContent =
                     `${inputs.hari.value}, ${inputs.mulai.value} - ${inputs.selesai.value}`;
                 let desc = inputs.deskripsi.value;
                 previews.deskripsi.textContent = desc.length > 60 ? desc.substring(0, 60) + '...' : desc;
             }
+
+            // Bind events
             Object.values(inputs).forEach(input => input.addEventListener('input', updatePreview));
+
+            // Bind radio events
+            const iconRadios = document.querySelectorAll('input[name="icon"]');
+            iconRadios.forEach(radio => {
+                radio.addEventListener('change', updatePreview);
+            });
         });
     </script>
 @endsection
