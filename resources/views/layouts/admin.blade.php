@@ -352,14 +352,7 @@
             </div>
 
             <div class="content-wrapper">
-                @if (session('success'))
-                    <div class="alert-modern alert-success">
-                        <i class="bi bi-check-circle-fill"></i>
-                        <div>
-                            <strong>Berhasil!</strong> {{ session('success') }}
-                        </div>
-                    </div>
-                @endif
+
 
                 @yield('content')
             </div>

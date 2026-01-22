@@ -31,6 +31,9 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     // CRUD Ekskul (Otomatis: index, create, store, edit, update, destroy)
     Route::resource('ekskul', EkskulController::class);
 
+    Route::get('/ekskul/{id}/detail', [EkskulController::class, 'show'])->name('ekskul.show');
+    Route::delete('/ekskul/{ekskulId}/siswa/{siswaId}', [EkskulController::class, 'removeSiswa'])->name('ekskul.removeSiswa');
+
     // Manage Siswa
     Route::get('/siswa', [SiswaController::class, 'index'])->name('siswa.index');
     Route::delete('/siswa/{id}', [SiswaController::class, 'destroy'])->name('siswa.destroy');

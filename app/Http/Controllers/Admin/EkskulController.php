@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Ekskul;
+use App\Models\Registrant;
 
 class EkskulController extends Controller
 {
@@ -55,5 +56,21 @@ class EkskulController extends Controller
     {
         Ekskul::findOrFail($id)->delete();
         return back()->with('success', 'Ekskul berhasil dihapus!');
+    }
+    public function show($id)
+    {
+        $ekskul = Ekskul::with('registrants')->findOrFail($id);
+        return view('admin.ekskul.show', compact('ekskul'));
+    }
+
+    public function removeSiswa($ekskulId, $siswaId)
+    {
+        $siswa = Registrant::where('id', $siswaId)
+            ->where('ekskul_id', $ekskulId)
+            ->firstOrFail();
+
+        $siswa->delete();
+
+        return back()->with('success', 'Siswa berhasil dihapus dari ekskul!');
     }
 }

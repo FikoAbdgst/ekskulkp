@@ -286,6 +286,17 @@
             border-color: #6366f1;
             box-shadow: 0 4px 10px rgba(99, 102, 241, 0.3);
         }
+
+        .btn-detail {
+            background: #dbeafe;
+            color: #1e40af;
+            border: 1px solid #60a5fa;
+        }
+
+        .btn-detail:hover {
+            background: #bfdbfe;
+            transform: translateY(-2px);
+        }
     </style>
 
     <div class="page-header">
@@ -332,18 +343,26 @@
                             </td>
                             <td>{{ Str::limit($ekskul->deskripsi, 50) }}</td>
                             <td style="text-align: center;">
-                                {{-- TOMBOL EDIT (Data dikirim via atribut data-ekskul, aman dari error syntax) --}}
+                                {{-- TOMBOL DETAIL --}}
+                                <a href="{{ route('admin.ekskul.show', $ekskul->id) }}" class="btn-action btn-detail"
+                                    title="Lihat Detail">
+                                    <i class="bi bi-eye"></i>
+                                </a>
+
+                                {{-- TOMBOL EDIT --}}
                                 <button type="button" class="btn-action btn-edit" data-bs-toggle="modal"
                                     data-bs-target="#ekskulModal" data-mode="edit" data-ekskul="{{ $ekskul }}"
                                     title="Edit Ekskul">
                                     <i class="bi bi-pencil-square"></i>
                                 </button>
 
+                                {{-- TOMBOL HAPUS --}}
                                 <form action="{{ route('admin.ekskul.destroy', $ekskul->id) }}" method="POST"
                                     class="d-inline" onsubmit="return confirm('Hapus data?')">
                                     @csrf @method('DELETE')
-                                    <button type="submit" class="btn-action btn-delete" title="Hapus Ekskul"><i
-                                            class="bi bi-trash3"></i></button>
+                                    <button type="submit" class="btn-action btn-delete" title="Hapus Ekskul">
+                                        <i class="bi bi-trash3"></i>
+                                    </button>
                                 </form>
                             </td>
                         </tr>
