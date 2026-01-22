@@ -19,7 +19,11 @@ class EkskulController extends Controller
         $request->validate([
             'nama' => 'required',
             'deskripsi' => 'required',
-            'jadwal' => 'required',
+            'icon' => 'required',
+            'warna' => 'required',
+            'hari' => 'required',
+            'jam_mulai' => 'required',
+            'jam_selesai' => 'required',
         ]);
 
         Ekskul::create($request->all());
@@ -35,6 +39,16 @@ class EkskulController extends Controller
     public function update(Request $request, $id)
     {
         $ekskul = Ekskul::findOrFail($id);
+        $request->validate([
+            'nama' => 'required',
+            'deskripsi' => 'required',
+            'icon' => 'required',
+            'warna' => 'required',
+            'hari' => 'required',
+            'jam_mulai' => 'required',
+            'jam_selesai' => 'required',
+        ]);
+
         $ekskul->update($request->all());
         return redirect()->route('admin.ekskul.index')->with('success', 'Ekskul berhasil diupdate!');
     }

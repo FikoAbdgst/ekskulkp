@@ -4,20 +4,18 @@
 
 @section('content')
     <style>
+        /* Style Halaman Admin */
         .page-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 28px;
-            flex-wrap: wrap;
-            gap: 16px;
         }
 
         .page-header h4 {
             font-size: 1.75rem;
             font-weight: 700;
             color: #1e293b;
-            margin: 0;
             display: flex;
             align-items: center;
             gap: 12px;
@@ -47,21 +45,16 @@
             background: white;
             border-radius: 20px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
-            /* overflow: hidden; Hapus ini agar dropdown/tooltip tidak terpotong jika ada */
             padding-bottom: 20px;
         }
 
-        /* PERBAIKAN DI SINI: Menghapus scroll */
         .table-wrapper {
             width: 100%;
-            /* overflow-x: auto;  <-- Dihapus agar tidak scroll */
         }
 
         .table-modern {
-            margin: 0;
             width: 100%;
             table-layout: fixed;
-            /* Opsional: Memaksa tabel mengikuti lebar container */
         }
 
         .table-modern thead {
@@ -72,10 +65,9 @@
             padding: 20px 24px;
             font-weight: 700;
             color: #475569;
-            text-transform: uppercase;
             font-size: 0.85rem;
-            letter-spacing: 0.5px;
             border: none;
+            text-transform: uppercase;
         }
 
         .table-modern tbody td {
@@ -83,56 +75,37 @@
             vertical-align: middle;
             color: #334155;
             border-bottom: 1px solid #f1f5f9;
-
-            /* PERBAIKAN DI SINI: Agar teks turun ke bawah (wrap) */
             white-space: normal;
             word-wrap: break-word;
         }
 
-        /* Mengatur lebar kolom agar proporsional */
         .col-nama {
             width: 30%;
         }
 
         .col-jadwal {
-            width: 20%;
+            width: 25%;
         }
 
         .col-deskripsi {
-            width: 30%;
+            width: 25%;
         }
 
         .col-aksi {
             width: 20%;
         }
 
-        .table-modern tbody tr {
-            transition: all 0.3s ease;
-        }
-
-        .table-modern tbody tr:hover {
-            background: #f8fafc;
-            /* transform: scale(1.01); Hapus scale agar tidak merusak layout tabel statis */
-        }
-
-        .table-modern tbody tr:last-child td {
-            border-bottom: none;
-        }
-
         .badge-schedule {
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            background: linear-gradient(135deg, #dbeafe, #bfdbfe);
-            color: #1e40af;
-            padding: 8px 16px;
+            background: #f1f5f9;
+            color: #475569;
+            padding: 6px 12px;
             border-radius: 50px;
             font-size: 0.85rem;
             font-weight: 600;
-            border: 1px solid #93c5fd;
-            white-space: normal;
-            /* Izinkan badge turun ke bawah jika panjang */
-            text-align: left;
+            border: 1px solid #e2e8f0;
         }
 
         .btn-action {
@@ -145,46 +118,20 @@
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            margin-bottom: 4px;
-            /* Jaga jarak jika tombol turun ke bawah */
+            margin-right: 5px;
+            text-decoration: none;
         }
 
         .btn-edit {
-            background: linear-gradient(135deg, #fef3c7, #fde68a);
+            background: #fef3c7;
             color: #92400e;
             border: 1px solid #fbbf24;
         }
 
-        .btn-edit:hover {
-            background: linear-gradient(135deg, #fbbf24, #f59e0b);
-            color: white;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(251, 191, 36, 0.4);
-        }
-
         .btn-delete {
-            background: linear-gradient(135deg, #fee2e2, #fecaca);
+            background: #fee2e2;
             color: #991b1b;
             border: 1px solid #f87171;
-        }
-
-        .btn-delete:hover {
-            background: linear-gradient(135deg, #ef4444, #dc2626);
-            color: white;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
-        }
-
-        .empty-state {
-            text-align: center;
-            padding: 60px 20px;
-            color: #94a3b8;
-        }
-
-        .empty-state i {
-            font-size: 4rem;
-            margin-bottom: 20px;
-            opacity: 0.5;
         }
 
         /* Modal Styles */
@@ -197,14 +144,8 @@
         .modal-header {
             border: none;
             padding: 32px 32px 0;
-            background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+            background: white;
             border-radius: 24px 24px 0 0;
-        }
-
-        .modal-title {
-            font-weight: 700;
-            color: #1e293b;
-            font-size: 1.5rem;
         }
 
         .modal-body {
@@ -219,23 +160,19 @@
         .form-label {
             font-weight: 600;
             color: #475569;
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
         }
 
         .form-control,
         .form-select {
             border-radius: 12px;
-            padding: 14px 18px;
+            padding: 12px 16px;
             border: 2px solid #e2e8f0;
             background-color: #f8fafc;
-            transition: all 0.3s ease;
         }
 
-        .form-control:focus,
-        .form-select:focus {
+        .form-control:focus {
             background-color: #fff;
             border-color: #6366f1;
             box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
@@ -248,24 +185,14 @@
             background: linear-gradient(135deg, #6366f1, #8b5cf6);
             color: white;
             font-weight: 600;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
-        }
-
-        .btn-submit:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(99, 102, 241, 0.4);
+            width: 100%;
         }
     </style>
 
     <div class="page-header">
-        <h4>
-            <i class="bi bi-activity" style="color: #6366f1;"></i>
-            Daftar Ekstrakurikuler
-        </h4>
+        <h4><i class="bi bi-activity" style="color: #6366f1;"></i> Daftar Ekstrakurikuler</h4>
         <button type="button" class="btn-add" data-bs-toggle="modal" data-bs-target="#addEkskulModal">
-            <i class="bi bi-plus-circle-fill"></i>
-            Tambah Ekskul
+            <i class="bi bi-plus-circle-fill"></i> Tambah Ekskul
         </button>
     </div>
 
@@ -284,53 +211,40 @@
                     @forelse ($ekskuls as $ekskul)
                         <tr>
                             <td>
-                                <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+                                <div style="display: flex; align-items: center; gap: 12px;">
                                     <div
-                                        style="width: 45px; height: 45px; background: linear-gradient(135deg, #6366f1, #8b5cf6); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.2rem; flex-shrink: 0;">
-                                        <i class="bi bi-stars"></i>
+                                        style="width: 48px; height: 48px; background: {{ $ekskul->warna }}; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5rem; flex-shrink: 0; box-shadow: 0 4px 10px {{ $ekskul->warna }}40;">
+                                        {{-- ICON LANGSUNG DITAMPILKAN SEBAGAI STRING/EMOJI --}}
+                                        {{ $ekskul->icon }}
                                     </div>
-                                    <div style="min-width: 0;"> <strong
-                                            style="font-size: 1.05rem; word-wrap: break-word;">{{ $ekskul->nama }}</strong>
+                                    <div>
+                                        <strong style="font-size: 1.05rem; display:block;">{{ $ekskul->nama }}</strong>
+                                        <small class="text-muted">Ekskul Sekolah</small>
                                     </div>
                                 </div>
                             </td>
                             <td>
                                 <span class="badge-schedule">
-                                    <i class="bi bi-calendar-event"></i>
-                                    {{ $ekskul->jadwal }}
+                                    <i class="bi bi-clock-history"></i>
+                                    {{ $ekskul->hari }}, {{ \Carbon\Carbon::parse($ekskul->jam_mulai)->format('H:i') }} -
+                                    {{ \Carbon\Carbon::parse($ekskul->jam_selesai)->format('H:i') }}
                                 </span>
                             </td>
-                            <td>
-                                <span
-                                    style="color: #64748b; display: block;">{{ Str::limit($ekskul->deskripsi, 60) }}</span>
-                            </td>
+                            <td>{{ Str::limit($ekskul->deskripsi, 50) }}</td>
                             <td style="text-align: center;">
-                                <div style="display: flex; gap: 5px; justify-content: center; flex-wrap: wrap;">
-                                    <a href="{{ route('admin.ekskul.edit', $ekskul->id) }}" class="btn-action btn-edit">
-                                        <i class="bi bi-pencil-square"></i>
-                                        Edit
-                                    </a>
-                                    <form action="{{ route('admin.ekskul.destroy', $ekskul->id) }}" method="POST"
-                                        class="d-inline" onsubmit="return confirm('Yakin ingin menghapus ekskul ini?')">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn-action btn-delete">
-                                            <i class="bi bi-trash3"></i>
-                                            Hapus
-                                        </button>
-                                    </form>
-                                </div>
+                                <a href="{{ route('admin.ekskul.edit', $ekskul->id) }}" class="btn-action btn-edit"><i
+                                        class="bi bi-pencil-square"></i></a>
+                                <form action="{{ route('admin.ekskul.destroy', $ekskul->id) }}" method="POST"
+                                    class="d-inline" onsubmit="return confirm('Hapus data?')">
+                                    @csrf @method('DELETE')
+                                    <button type="submit" class="btn-action btn-delete"><i
+                                            class="bi bi-trash3"></i></button>
+                                </form>
                             </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="4">
-                                <div class="empty-state">
-                                    <i class="bi bi-inbox"></i>
-                                    <h5>Belum ada data ekskul</h5>
-                                    <p>Klik tombol "Tambah Ekskul" untuk menambahkan ekstrakurikuler baru</p>
-                                </div>
-                            </td>
+                            <td colspan="4" class="text-center py-5 text-muted">Belum ada data ekskul.</td>
                         </tr>
                     @endforelse
                 </tbody>
@@ -338,52 +252,178 @@
         </div>
     </div>
 
+    {{-- MODAL TAMBAH EKSKUL (ICON STRING) --}}
     <div class="modal fade" id="addEkskulModal" tabindex="-1">
-        <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
             <form action="{{ route('admin.ekskul.store') }}" method="POST" class="modal-content">
                 @csrf
                 <div class="modal-header">
-                    <h5 class="modal-title">
-                        <i class="bi bi-plus-circle me-2" style="color: #6366f1;"></i>
-                        Tambah Ekskul Baru
-                    </h5>
+                    <h5 class="modal-title">Tambah Ekskul Baru</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="mb-3">
-                        <label class="form-label">
-                            <i class="bi bi-tag" style="color: #6366f1;"></i>
-                            Nama Ekskul
-                        </label>
-                        <input type="text" name="nama" class="form-control" required
-                            placeholder="Contoh: Basket, Musik, dll">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">
-                            <i class="bi bi-calendar-event" style="color: #6366f1;"></i>
-                            Jadwal
-                        </label>
-                        <input type="text" name="jadwal" class="form-control" required
-                            placeholder="Contoh: Senin, 15.00 - 17.00">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">
-                            <i class="bi bi-card-text" style="color: #6366f1;"></i>
-                            Deskripsi
-                        </label>
-                        <textarea name="deskripsi" class="form-control" rows="4" required
-                            placeholder="Jelaskan tentang ekstrakurikuler ini..."></textarea>
+                    <div class="row">
+                        <div class="col-md-7 border-end pe-4">
+                            <div class="mb-3">
+                                <label class="form-label">Nama Ekskul</label>
+                                <input type="text" name="nama" id="inputNama" class="form-control" required
+                                    placeholder="Contoh: Basket">
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Icon / Emoji</label>
+                                    {{-- INPUT BIASA --}}
+                                    <input type="text" name="icon" id="inputIcon" class="form-control"
+                                        placeholder="Paste emoji: 🏀, 🎸" required>
+                                    <small class="text-muted" style="font-size: 0.75rem">Tekan <b>Win + .</b> untuk
+                                        emoji</small>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Warna Tema</label>
+                                    <input type="color" name="warna" id="inputWarna"
+                                        class="form-control form-control-color w-100" value="#6366f1">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label">Hari</label>
+                                    <select name="hari" id="inputHari" class="form-select" required>
+                                        <option value="Senin">Senin</option>
+                                        <option value="Selasa">Selasa</option>
+                                        <option value="Rabu">Rabu</option>
+                                        <option value="Kamis">Kamis</option>
+                                        <option value="Jumat">Jumat</option>
+                                        <option value="Sabtu">Sabtu</option>
+                                        <option value="Minggu">Minggu</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label">Mulai</label>
+                                    <input type="time" name="jam_mulai" id="inputMulai" class="form-control" required>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label">Selesai</label>
+                                    <input type="time" name="jam_selesai" id="inputSelesai" class="form-control"
+                                        required>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Deskripsi</label>
+                                <textarea name="deskripsi" id="inputDeskripsi" class="form-control" rows="3" required></textarea>
+                            </div>
+                        </div>
+                        {{-- PREVIEW SECTION --}}
+                        <div class="col-md-5 ps-4 d-flex flex-column align-items-center justify-content-center">
+                            <h6 class="text-uppercase text-muted fw-bold mb-3" style="font-size: 0.8rem;">Preview Tampilan
+                                User</h6>
+
+                            {{-- Ganti div dengan class "user-card-preview" di dalam modal dengan ini --}}
+                            <div class="user-card-preview bg-white rounded-4 shadow-sm w-100 overflow-hidden p-4"
+                                style="border: 1px solid #e2e8f0; border-top: 5px solid #6366f1; transition: all 0.3s ease;">
+
+                                {{-- Header: Icon & Nama --}}
+                                <div class="d-flex align-items-center gap-3 mb-4">
+                                    <div id="previewIconBox"
+                                        style="width: 50px; height: 50px; background: #6366f1; border-radius: 14px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5rem; box-shadow: 0 8px 20px rgba(99,102,241,0.4);">
+                                        <span id="previewIcon">⭐</span>
+                                    </div>
+                                    <div>
+                                        <h5 id="previewNama" class="fw-bold text-dark mb-0">Nama Ekskul</h5>
+                                        <small class="text-muted">Ekstrakurikuler</small>
+                                    </div>
+                                </div>
+
+                                {{-- Badge Jadwal --}}
+                                <div class="mb-3">
+                                    <div id="previewBadge"
+                                        class="d-flex align-items-center justify-content-center gap-2 py-2 px-3 rounded-pill"
+                                        style="background: #6366f115; color: #6366f1; border: 1px solid #6366f130; font-size: 0.85rem; font-weight: 600;">
+                                        <i class="bi bi-clock-history"></i>
+                                        <span id="previewJadwal">Senin, --:-- - --:--</span>
+                                    </div>
+                                </div>
+
+                                <p id="previewDeskripsi" class="text-muted small mb-0" style="line-height: 1.5;">
+                                    Deskripsi akan muncul di sini...
+                                </p>
+                            </div>
+
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-light" data-bs-dismiss="modal"
-                        style="border-radius: 12px; padding: 12px 24px; font-weight: 600;">Batal</button>
-                    <button type="submit" class="btn-submit">
-                        <i class="bi bi-check-circle me-2"></i>
-                        Simpan Ekskul
-                    </button>
+                    <button type="submit" class="btn-submit">Simpan Ekskul</button>
                 </div>
             </form>
         </div>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Ambil elemen input
+            const inputs = {
+                nama: document.getElementById('inputNama'),
+                icon: document.getElementById('inputIcon'),
+                warna: document.getElementById('inputWarna'),
+                hari: document.getElementById('inputHari'),
+                mulai: document.getElementById('inputMulai'),
+                selesai: document.getElementById('inputSelesai'),
+                deskripsi: document.getElementById('inputDeskripsi')
+            };
+
+            // Ambil elemen preview
+            const previews = {
+                card: document.querySelector('.user-card-preview'), // Wrapper kartu
+                nama: document.getElementById('previewNama'),
+                icon: document.getElementById('previewIcon'),
+                iconBox: document.getElementById('previewIconBox'),
+                jadwal: document.getElementById('previewJadwal'), // Badge text
+                badge: document.getElementById('previewBadge'), // Badge wrapper
+                deskripsi: document.getElementById('previewDeskripsi')
+            };
+
+            function updatePreview() {
+                // 1. Data Dasar
+                previews.nama.textContent = inputs.nama.value || 'Nama Ekskul';
+                previews.icon.textContent = inputs.icon.value || '⭐';
+                let desc = inputs.deskripsi.value || 'Deskripsi singkat ekskul...';
+                previews.deskripsi.textContent = desc.length > 80 ? desc.substring(0, 80) + '...' : desc;
+
+                // 2. Logika Warna (Desain Baru)
+                const color = inputs.warna.value;
+
+                // A. Border Atas Kartu
+                previews.card.style.borderTop = `5px solid ${color}`;
+
+                // B. Icon Box
+                previews.iconBox.style.background = color;
+                previews.iconBox.style.boxShadow = `0 8px 20px ${color}40`;
+
+                // C. Badge Jadwal (Background tint & Text color)
+                // Menambahkan '15' di belakang hex untuk transparansi (Hex Alpha)
+                if (previews.badge) {
+                    previews.badge.style.background = color + '15';
+                    previews.badge.style.color = color;
+                    previews.badge.style.border = `1px solid ${color}30`;
+                }
+
+                // 3. Jadwal
+                const hari = inputs.hari.value;
+                const mulai = inputs.mulai.value || '--:--';
+                const selesai = inputs.selesai.value || '--:--';
+                previews.jadwal.textContent = `${hari}, ${mulai} - ${selesai}`;
+            }
+
+            // Pasang Event Listener
+            Object.values(inputs).forEach(input => {
+                if (input) {
+                    input.addEventListener('input', updatePreview);
+                    input.addEventListener('change', updatePreview);
+                }
+            });
+
+            // Panggil sekali saat load (jika edit)
+            updatePreview();
+        });
+    </script>
 @endsection

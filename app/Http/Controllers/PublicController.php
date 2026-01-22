@@ -10,11 +10,9 @@ class PublicController extends Controller
 {
     public function index()
     {
-        // Ambil semua data ekskul untuk ditampilkan
         $ekskuls = Ekskul::all();
         return view('welcome', compact('ekskuls'));
     }
-
     public function store(Request $request)
     {
         $request->validate([
