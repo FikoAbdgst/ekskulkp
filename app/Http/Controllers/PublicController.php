@@ -11,25 +11,50 @@ class PublicController extends Controller
     public function index()
     {
         $ekskuls = Ekskul::all();
-        return view('welcome', compact('ekskuls'));
+
+        // Tambahkan data siswa dan kelas untuk halaman welcome
+        $query = Siswa::query();
+
+        // Search functionality
+        if (request()->filled('search')) {
+            $search = request('search');
+            $query->where(function ($q) use ($search) {
+                $q->where('nama_siswa', 'LIKE', "%{$search}%")
+                    ->orWhere('nisn', 'LIKE', "%{$search}%")
+                    ->orWhere('kelas', 'LIKE', "%{$search}%");
+            });
+        }
+
+        // Filter by kelas
+        if (request()->filled('kelas')) {
+            $query->where('kelas', request('kelas'));
+        }
+
+        // Sorting
+        $sortBy = request()->get('sort_by', 'created_at');
+        $sortOrder = request()->get('sort_order', 'desc');
+
+        if (in_array($sortBy, ['nama_siswa', 'nisn', 'kelas', 'created_at'])) {
+            $query->orderBy($sortBy, $sortOrder);
+        }
+
+        // Pagination with per_page option
+        $perPage = request()->get('per_page', 10);
+        $siswas = $query->paginate($perPage)->withQueryString();
+
+        // Get unique kelas for filter dropdown
+        $kelasList = Siswa::distinct()->pluck('kelas')->sort();
+
+        return view('welcome', compact('ekskuls', 'siswas', 'kelasList'));
     }
 
     // API untuk cek validitas siswa via AJAX
     public function checkSiswa(Request $request)
     {
-        /*************  ✨ Windsurf Command ⭐  *************/
-        /**
-         * Import data siswa dari file Excel (.xlsx, .xls, .csv).
-         *
-         * @param  \Illuminate\Http\Request  $request
-         * @return \Illuminate\Http\RedirectResponse
-         *
-         * @throws \Exception
-         */
-        /*******  cc02a89f-8d82-42c8-be87-532f750cdb48  *******/        $request->validate([
+        // Validasi input (Kelas dihapus)
+        $request->validate([
             'nisn' => 'required',
             'nama' => 'required',
-            'kelas' => 'required'
         ]);
 
         // Cari siswa berdasarkan NISN
@@ -50,13 +75,8 @@ class PublicController extends Controller
             ]);
         }
 
-        // Cek kesesuaian Kelas
-        if ($siswa->kelas != $request->kelas) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Kelas tidak sesuai dengan data siswa.'
-            ]);
-        }
+        // --- BAGIAN CEK KELAS DIHAPUS ---
+        // Verifikasi hanya membutuhkan NISN dan Nama yang cocok
 
         return response()->json([
             'status' => 'success',
