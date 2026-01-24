@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class Siswa extends Model
 {
@@ -11,7 +11,19 @@ class Siswa extends Model
 
     protected $fillable = ['nama_siswa', 'nisn', 'kelas'];
 
-    // Relasi: Satu siswa bisa ikut banyak ekskul
+    /**
+     * 1. Mutator: Otomatis ubah kelas jadi HURUF BESAR saat disimpan.
+     * (Mengatasi masalah input user huruf kecil)
+     */
+    public function setKelasAttribute($value)
+    {
+        $this->attributes['kelas'] = strtoupper($value);
+    }
+
+    /**
+     * 2. Relasi: Satu siswa bisa ikut banyak ekskul.
+     * (PENTING: Jangan dihapus agar error 'undefined method' hilang)
+     */
     public function ekskuls()
     {
         return $this->belongsToMany(Ekskul::class, 'ekskul_siswa')

@@ -24,11 +24,10 @@ class SiswaImport implements ToModel, WithHeadingRow
 
         // 2. Simpan / Update data
         return Siswa::updateOrCreate(
-            ['nisn' => $row['nisn']], // Cek berdasarkan NISN
+            ['nisn' => $row['nisn']],
             [
                 'nama_siswa'    => $row['nama'],
-                // Ambil kelas dari excel, jika kosong isi '-'
-                'kelas'         => $row['kelas'] ?? '-',
+                'kelas'         => strtoupper($row['kelas'] ?? '-'),
             ]
         );
     }

@@ -14,19 +14,22 @@ class SiswaController extends Controller
     {
         $query = Siswa::query();
 
-        // Search functionality
+        // LOGIKA SEARCH DIPERBAIKI
         if ($request->filled('search')) {
-            $search = $request->search;
+            // Apa pun yang diketik user, kita ubah jadi KAPITAL agar cocok dengan database
+            $search = strtoupper($request->search);
+
             $query->where(function ($q) use ($search) {
-                $q->where('nama_siswa', 'LIKE', "%{$search}%")
+                $q->where('nama_siswa', 'LIKE', "%{$search}%") // Nama biasanya aman dengan LIKE
                     ->orWhere('nisn', 'LIKE', "%{$search}%")
-                    ->orWhere('kelas', 'LIKE', "%{$search}%");
+                    ->orWhere('kelas', 'LIKE', "%{$search}%"); // Sekarang 'x rpl 1' akan cocok dengan 'X RPL 1'
             });
         }
 
-        // Filter by kelas
+        // LOGIKA FILTER KELAS
         if ($request->filled('kelas')) {
-            $query->where('kelas', $request->kelas);
+            // Filter dropdown juga kita paksa jadi kapital
+            $query->where('kelas', strtoupper($request->kelas));
         }
 
         // Sorting
@@ -39,7 +42,10 @@ class SiswaController extends Controller
 
         // Pagination with per_page option
         $perPage = $request->get('per_page', 10);
-        $siswas = $query->paginate($perPage)->withQueryString();
+
+        // UBAH BARIS INI:
+        // Tambahkan .withCount('ekskuls') sebelum paginate
+        $siswas = $query->withCount('ekskuls')->paginate($perPage)->withQueryString();
 
         // Get unique kelas for filter dropdown
         $kelasList = Siswa::distinct()->pluck('kelas')->sort();
@@ -69,7 +75,12 @@ class SiswaController extends Controller
             'kelas' => 'required'
         ]);
 
-        Siswa::create($request->all());
+        // UBAH LOGIKA PENYIMPANAN:
+        // Jangan langsung $request->all(), tapi manipulasi dulu kelasnya
+        $data = $request->all();
+        $data['kelas'] = strtoupper($request->kelas); // Paksa jadi huruf besar
+
+        Siswa::create($data); //
         return back()->with('success', 'Data siswa berhasil ditambahkan');
     }
 

@@ -108,12 +108,9 @@
                                 </div>
                                 <div class="col-md-12">
                                     <label class="form-label fw-bold">Kelas</label>
-                                    <select id="kelas" class="form-select form-select-lg">
-                                        <option value="">Pilih Kelas...</option>
-                                        <option value="X">Kelas X</option>
-                                        <option value="XI">Kelas XI</option>
-                                        <option value="XII">Kelas XII</option>
-                                    </select>
+                                    <input type="text" id="kelas" class="form-control form-control-lg"
+                                        placeholder="Kelas anda">
+
                                 </div>
                             </div>
 
@@ -212,7 +209,7 @@
                     // Success
                     document.getElementById('step1-verify').style.display = 'none';
                     document.getElementById('step2-ekskul').style.display =
-                    'block'; // Animasi fadeIn bisa ditambahkan css
+                        'block'; // Animasi fadeIn bisa ditambahkan css
 
                     document.getElementById('verified_siswa_id').value = result.siswa_id;
                     document.getElementById('greet_nama').innerText = nama;

@@ -782,7 +782,7 @@
                             <td>
                                 <span class="badge badge-ekskul">
                                     <i class="bi bi-bookmark-fill"></i>
-                                    {{ $siswa->ekskuls->count() }}
+                                    {{ $siswa->ekskuls_count }}
                                 </span>
                             </td>
                             <td class="action-cell">
