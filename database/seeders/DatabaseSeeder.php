@@ -22,5 +22,9 @@ class DatabaseSeeder extends Seeder
             'email' => 'admin123@gmail.com',
             'password' => bcrypt('admin123'),
         ]);
+
+        $this->call([
+            EkskulSeeder::class
+        ]);
     }
 }

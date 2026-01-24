@@ -85,12 +85,15 @@ class PublicController extends Controller
         ]);
     }
 
+    // File: app/Http/Controllers/PublicController.php
+
     public function store(Request $request)
     {
         $request->validate([
             'siswa_id' => 'required|exists:siswas,id',
             'ekskul_id' => 'required|exists:ekskuls,id',
             'no_wa' => 'required',
+            'alasan' => 'required|string|max:255', // Validasi alasan
         ]);
 
         $siswa = Siswa::findOrFail($request->siswa_id);
@@ -100,9 +103,13 @@ class PublicController extends Controller
             return back()->with('error', 'Kamu sudah terdaftar di ekskul ini sebelumnya!');
         }
 
-        // Daftar ekskul (attach ke pivot table)
-        $siswa->ekskuls()->attach($request->ekskul_id, ['no_wa' => $request->no_wa]);
+        // Daftar ekskul (simpan no_wa dan alasan)
+        $siswa->ekskuls()->attach($request->ekskul_id, [
+            'no_wa' => $request->no_wa,
+            'alasan' => $request->alasan
+        ]);
 
-        return back()->with('success', 'Selamat! Kamu berhasil mendaftar ekskul.');
+        // Kirim session khusus untuk memicu popup pilihan di frontend
+        return back()->with('success_register', 'Terima kasih telah daftar ekskul!');
     }
 }
