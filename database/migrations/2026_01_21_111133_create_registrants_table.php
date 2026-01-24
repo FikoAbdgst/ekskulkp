@@ -11,15 +11,25 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('registrants', function (Blueprint $table) {
+        // 1. Tabel Master Siswa (Data Siswa Sekolah)
+        Schema::create('siswas', function (Blueprint $table) {
             $table->id();
+            $table->string('nisn')->unique(); // Kunci utama identifikasi
             $table->string('nama_siswa');
             $table->string('kelas');
-            $table->string('nisn');
-            $table->string('no_wa');
-            $table->foreignId('ekskul_id')->constrained('ekskuls')->onDelete('cascade');
-            $table->text('alasan'); // <--- Tambahkan Baris Ini
             $table->timestamps();
+        });
+
+        // 2. Tabel Transaksi Pendaftaran (Pivot Siswa <-> Ekskul)
+        Schema::create('ekskul_siswa', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('siswa_id')->constrained('siswas')->onDelete('cascade');
+            $table->foreignId('ekskul_id')->constrained('ekskuls')->onDelete('cascade');
+            $table->string('no_wa'); // No WA disimpan saat mendaftar ekskul
+            $table->timestamps();
+
+            // Mencegah duplikasi: 1 Siswa hanya bisa 1x daftar di Ekskul yang sama
+            $table->unique(['siswa_id', 'ekskul_id']);
         });
     }
 
@@ -28,6 +38,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('registrants');
+        Schema::dropIfExists('ekskul_siswa');
+        Schema::dropIfExists('siswas');
     }
 };

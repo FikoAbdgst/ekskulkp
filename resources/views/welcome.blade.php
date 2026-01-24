@@ -4,508 +4,256 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pendaftaran Ekskul Sekolah</title>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>Pendaftaran Ekskul</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
-        rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 
     <style>
-        :root {
-            --primary: #4f46e5;
-            --primary-dark: #4338ca;
-            --primary-light: #818cf8;
-            --secondary: #06b6d4;
-            --success: #10b981;
-            --dark: #1e293b;
-            --light: #f8fafc;
-            --gray: #64748b;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
         body {
             font-family: 'Poppins', sans-serif;
-            background: #ffffff;
-            min-height: 100vh;
-        }
-
-        /* --- HERO SECTION --- */
-        .hero {
-            padding: 60px 0 80px;
-            text-align: center;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            margin-bottom: 60px;
-        }
-
-        .hero h1 {
-            font-weight: 800;
-            font-size: 3.5rem;
-            margin-bottom: 20px;
-            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-        }
-
-        .hero p {
-            font-size: 1.2rem;
-            opacity: 0.95;
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
-        .hero-badge {
-            display: inline-block;
-            background: rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(10px);
-            padding: 8px 20px;
-            border-radius: 50px;
-            font-size: 14px;
-            font-weight: 500;
-            margin-bottom: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-        }
-
-        /* --- FORM CARD --- */
-        .form-card {
-            background: white;
-            border-radius: 24px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-            padding: 40px;
-            margin-bottom: 40px;
-            border: 1px solid #f1f5f9;
-        }
-
-        .section-header {
-            text-align: center;
-            margin-bottom: 35px;
-        }
-
-        .step-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: linear-gradient(135deg, var(--primary), var(--primary-light));
-            color: white;
-            padding: 8px 20px;
-            border-radius: 50px;
-            font-size: 14px;
-            font-weight: 600;
-            margin-bottom: 15px;
-            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
-        }
-
-        /* --- INPUT STYLES --- */
-        .form-control,
-        .form-select {
-            border-radius: 12px;
-            padding: 14px 18px;
-            border: 2px solid #e2e8f0;
-            background-color: #f8fafc;
-            transition: all 0.3s ease;
-        }
-
-        .form-control:focus,
-        .form-select:focus {
-            background-color: #fff;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1);
-        }
-
-        /* --- EKSKUL SECTION BACKGROUND --- */
-        .ekskul-section {
             background: #f8fafc;
-            padding: 60px 0;
-            margin: 0 -15px;
-            border-radius: 30px;
         }
 
-        .ekskul-header {
+        .hero {
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            padding: 80px 0;
+            color: white;
             text-align: center;
-            margin-bottom: 50px;
-            padding: 0 15px;
+            border-radius: 0 0 50px 50px;
+            margin-bottom: -60px;
         }
 
-        .ekskul-header h2 {
-            color: #1e293b;
-            font-weight: 700;
-            font-size: 2.5rem;
-            margin-bottom: 12px;
-        }
-
-        .ekskul-header p {
-            color: #64748b;
-            font-size: 1.1rem;
-        }
-
-        /* --- EKSKUL CARD CLEAN DESIGN --- */
-        .ekskul-card {
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            background: #ffffff;
+        .main-card {
+            background: white;
             border-radius: 20px;
-            overflow: hidden;
-            height: 100%;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            padding: 40px;
             position: relative;
+            z-index: 10;
+        }
+
+        .ekskul-card {
             border: 2px solid #e2e8f0;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-        }
-
-        /* Hover Effect */
-        .ekskul-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
-            border-color: #cbd5e1;
-        }
-
-        /* Selected State */
-        input[type="radio"]:checked+.ekskul-card {
-            background: #ffffff;
-            transform: translateY(-8px) scale(1.02);
-        }
-
-        /* Icon Wrapper */
-        .card-icon-wrapper {
-            width: 65px;
-            height: 65px;
             border-radius: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2rem;
-            transition: transform 0.3s ease;
-            color: white;
+            transition: all 0.3s;
+            cursor: pointer;
+            height: 100%;
         }
 
-        .ekskul-card:hover .card-icon-wrapper {
-            transform: rotate(5deg) scale(1.08);
+        .ekskul-card:hover {
+            border-color: #6366f1;
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(99, 102, 241, 0.1);
         }
 
-        /* Badge Jadwal */
-        .ekskul-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 8px 16px;
-            border-radius: 50px;
-            font-size: 0.85rem;
+        input[type="radio"]:checked+.ekskul-card {
+            border-color: #6366f1;
+            background-color: #eef2ff;
+        }
+
+        .step-indicator {
+            display: inline-block;
+            padding: 5px 15px;
+            background: #e0e7ff;
+            color: #4338ca;
+            border-radius: 20px;
             font-weight: 600;
-        }
-
-        /* Checkmark Overlay */
-        .check-overlay {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            width: 35px;
-            height: 35px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            opacity: 0;
-            transform: scale(0) rotate(-180deg);
-            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-        }
-
-        input[type="radio"]:checked+.ekskul-card .check-overlay {
-            opacity: 1;
-            transform: scale(1) rotate(0);
-        }
-
-        /* --- BUTTONS --- */
-        .btn-custom {
-            padding: 14px 40px;
-            border-radius: 50px;
-            font-weight: 600;
-            border: none;
-            transition: all 0.3s ease;
-        }
-
-        .btn-primary-custom {
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-            color: white;
-            box-shadow: 0 8px 20px rgba(79, 70, 229, 0.3);
-        }
-
-        .btn-success-custom {
-            background: linear-gradient(135deg, #10b981, #059669);
-            color: white;
-            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
-        }
-
-        .btn-custom:hover {
-            transform: translateY(-3px);
-            filter: brightness(1.1);
-        }
-
-        #section-pilih-ekskul {
-            display: none;
-            animation: fadeInUp 0.6s ease;
-        }
-
-        #section-pilih-ekskul.show {
-            display: block;
-        }
-
-        #btn-submit-area {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: rgba(255, 255, 255, 0.98);
-            backdrop-filter: blur(10px);
-            padding: 20px 0;
-            border-top: 1px solid #e2e8f0;
-            transform: translateY(100%);
-            transition: transform 0.4s ease;
-            z-index: 100;
-            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.08);
-        }
-
-        #btn-submit-area.show {
-            transform: translateY(0);
-        }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @media (max-width: 768px) {
-            .hero h1 {
-                font-size: 2.5rem;
-            }
-
-            .form-card {
-                padding: 25px;
-            }
-
-            .ekskul-header h2 {
-                font-size: 2rem;
-            }
+            font-size: 0.9rem;
+            margin-bottom: 20px;
         }
     </style>
 </head>
 
 <body>
-    <div class="content-wrapper">
-        <div class="hero">
-            <div class="container">
-                <div class="hero-badge">
-                    <i class="bi bi-star-fill"></i> Tahun Ajaran 2024/2025
-                </div>
-                <h1>Temukan Bakatmu!</h1>
-                <p>Pilih ekstrakurikuler yang sesuai dengan minat dan bakatmu.</p>
-            </div>
-        </div>
 
-        <div class="container pb-5 mb-5">
-            <form action="{{ route('daftar.store') }}" method="POST">
-                @csrf
-                <div class="row justify-content-center">
-                    <div class="col-lg-8 col-md-10">
-                        <div class="form-card">
-                            <div class="section-header">
-                                <div class="step-badge">
-                                    <i class="bi bi-person-fill"></i> Langkah 1
-                                </div>
-                                <h3>Lengkapi Data Diri</h3>
+    <div class="hero">
+        <div class="container">
+            <h1 class="fw-bold">Pendaftaran Ekstrakurikuler</h1>
+            <p class="opacity-75">Tahun Ajaran 2025/2026</p>
+        </div>
+    </div>
+
+    <div class="container pb-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="main-card">
+
+                    <form action="{{ route('daftar.store') }}" method="POST" id="registrationForm">
+                        @csrf
+                        <input type="hidden" name="siswa_id" id="verified_siswa_id">
+
+                        <div id="step1-verify">
+                            <div class="text-center">
+                                <span class="step-indicator">Langkah 1 dari 2</span>
+                                <h3 class="mb-4">Verifikasi Data Diri</h3>
                             </div>
 
-                            <div class="row g-4">
-                                <div class="col-12">
-                                    <label class="form-label">Nama Lengkap</label>
-                                    <input type="text" name="nama_siswa" id="inputNama" class="form-control" required
-                                        placeholder="Nama Lengkap">
+                            <div class="alert alert-info small">
+                                <i class="bi bi-info-circle me-1"></i>
+                                Masukkan data sesuai dengan data sekolah. Jika data tidak ditemukan, hubungi admin.
+                            </div>
+
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">NISN</label>
+                                    <input type="text" id="nisn" class="form-control form-control-lg"
+                                        placeholder="Contoh: 00548xxx">
                                 </div>
                                 <div class="col-md-6">
-                                    <label class="form-label">Kelas</label>
-                                    <select name="kelas" class="form-select" required>
-                                        <option value="" disabled selected>Pilih Kelas</option>
+                                    <label class="form-label fw-bold">Nama Lengkap</label>
+                                    <input type="text" id="nama" class="form-control form-control-lg"
+                                        placeholder="Sesuai Absen">
+                                </div>
+                                <div class="col-md-12">
+                                    <label class="form-label fw-bold">Kelas</label>
+                                    <select id="kelas" class="form-select form-select-lg">
+                                        <option value="">Pilih Kelas...</option>
                                         <option value="X">Kelas X</option>
                                         <option value="XI">Kelas XI</option>
                                         <option value="XII">Kelas XII</option>
                                     </select>
                                 </div>
-                                <div class="col-md-6">
-                                    <label class="form-label">WhatsApp</label>
-                                    <div class="input-group">
-                                        <span class="input-group-text">+62</span>
-                                        <input type="number" name="no_wa" class="form-control" required
-                                            placeholder="8xx">
-                                    </div>
-                                </div>
-                                <div class="col-12">
-                                    <label class="form-label">NISN</label>
-                                    <input type="text" name="nisn" class="form-control" required
-                                        placeholder="Nomor NISN">
-                                </div>
                             </div>
 
-                            <div class="text-center mt-4">
-                                <button type="button" class="btn btn-custom btn-primary-custom"
-                                    onclick="showEkskulSection()">
-                                    Lanjut Pilih Ekskul <i class="bi bi-arrow-right ms-2"></i>
+                            <div class="d-grid mt-4">
+                                <button type="button" class="btn btn-primary btn-lg" onclick="verifySiswa()"
+                                    id="btnCheck">
+                                    Cek Data Saya <i class="bi bi-arrow-right ms-2"></i>
                                 </button>
                             </div>
                         </div>
-                    </div>
-                </div>
 
-                <div id="section-pilih-ekskul">
-                    <div class="ekskul-section">
-                        <div class="ekskul-header">
-                            <div class="step-badge">
-                                <i class="bi bi-stars"></i>
-                                Langkah 2
+                        <div id="step2-ekskul" style="display: none;">
+                            <div class="text-center mb-4">
+                                <span class="step-indicator bg-success text-success bg-opacity-10">Langkah 2 dari
+                                    2</span>
+                                <h3>Halo, <span id="greet_nama" class="text-primary"></span>!</h3>
+                                <p class="text-muted">Silakan lengkapi kontak dan pilih ekskul.</p>
                             </div>
-                            <h2>Pilih Ekskul Favoritmu</h2>
-                            <p>Klik pada kartu untuk memilih salah satu kegiatan ekstrakurikuler</p>
-                        </div>
 
-                        <div class="container">
-                            <div class="row g-4">
+                            <div class="mb-4">
+                                <label class="form-label fw-bold">Nomor WhatsApp (Aktif)</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light">+62</span>
+                                    <input type="number" name="no_wa" class="form-control" required
+                                        placeholder="8123xxxx">
+                                </div>
+                            </div>
+
+                            <h5 class="fw-bold mb-3">Pilih Ekstrakurikuler:</h5>
+                            <div class="row g-3">
                                 @foreach ($ekskuls as $ekskul)
-                                    <div class="col-md-6 col-lg-4">
+                                    <div class="col-md-6">
                                         <label class="w-100 h-100">
                                             <input type="radio" name="ekskul_id" value="{{ $ekskul->id }}"
-                                                class="d-none" onchange="showSubmitButton()">
-
-                                            <div class="card ekskul-card p-4 h-100"
-                                                style="border-top: 5px solid {{ $ekskul->warna }};"
-                                                onmouseover="this.style.boxShadow='0 15px 40px {{ $ekskul->warna }}40'; this.style.borderColor='{{ $ekskul->warna }}'"
-                                                onmouseout="this.style.boxShadow=''; this.style.borderColor='#e2e8f0'">
-
-                                                <div class="check-overlay"
-                                                    style="background: {{ $ekskul->warna }}; box-shadow: 0 4px 10px {{ $ekskul->warna }}40;">
-                                                    <i class="bi bi-check-lg"></i>
+                                                class="d-none" required>
+                                            <div class="ekskul-card p-3 d-flex align-items-center gap-3">
+                                                <div class="fs-1">{{ $ekskul->icon }}</div>
+                                                <div>
+                                                    <h5 class="fw-bold mb-1">{{ $ekskul->nama }}</h5>
+                                                    <small class="text-muted">{{ $ekskul->hari }}</small>
                                                 </div>
-
-                                                <div class="d-flex align-items-center gap-3 mb-4">
-                                                    <div class="card-icon-wrapper mb-0"
-                                                        style="background: {{ $ekskul->warna }};
-                                                        box-shadow: 0 8px 20px {{ $ekskul->warna }}40;
-                                                        width: 60px; height: 60px; font-size: 1.8rem; border-radius: 16px;">
-                                                        <span>{{ $ekskul->icon }}</span>
-                                                    </div>
-                                                    <div>
-                                                        <h4 class="fw-bold mb-1 text-dark" style="font-size: 1.25rem;">
-                                                            {{ $ekskul->nama }}</h4>
-                                                        <small class="text-muted">Ekstrakurikuler</small>
-                                                    </div>
+                                                <div class="ms-auto text-primary check-icon" style="opacity: 0;">
+                                                    <i class="bi bi-check-circle-fill fs-4"></i>
                                                 </div>
-
-                                                <div class="mb-3">
-                                                    <span class="ekskul-badge w-100 justify-content-center"
-                                                        style="background: {{ $ekskul->warna }}15;
-                                                         color: {{ $ekskul->warna }};
-                                                         border: 1px solid {{ $ekskul->warna }}30;">
-                                                        <i class="bi bi-clock-history"></i>
-                                                        {{ $ekskul->hari }},
-                                                        {{ \Carbon\Carbon::parse($ekskul->jam_mulai)->format('H:i') }}
-                                                    </span>
-                                                </div>
-
-                                                <p class="text-muted small mb-0" style="line-height: 1.6;">
-                                                    {{ Str::limit($ekskul->deskripsi, 90) }}
-                                                </p>
                                             </div>
                                         </label>
                                     </div>
                                 @endforeach
                             </div>
-                        </div>
-                    </div>
-                </div>
 
-                <div id="section-alasan" style="display: none;">
-                    <div class="container mt-4 mb-5 pb-5">
-                        <div class="row justify-content-center">
-                            <div class="col-lg-8 col-md-10">
-                                <div class="form-card" style="border-top: 4px solid var(--success);">
-                                    <div class="section-header">
-                                        <div class="step-badge" style="background: var(--success);">
-                                            <i class="bi bi-chat-quote-fill"></i> Langkah 3
-                                        </div>
-                                        <h3>Motivasi Kamu</h3>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label class="form-label fw-bold">Mengapa kamu ingin masuk ekskul ini?</label>
-                                        <textarea name="alasan" class="form-control" rows="4"
-                                            placeholder="Ceritakan alasan atau motivasimu disini..." required></textarea>
-                                    </div>
-                                </div>
+                            <div class="d-flex justify-content-between mt-5 pt-3 border-top">
+                                <button type="button" class="btn btn-light" onclick="location.reload()">Batal</button>
+                                <button type="submit" class="btn btn-success btn-lg px-5">Daftar Sekarang</button>
                             </div>
                         </div>
-                    </div>
-                </div>
-                <div id="btn-submit-area">
-                    <div class="container">
-                        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
-                            <div class="text-muted small">
-                                <i class="bi bi-info-circle me-1"></i> Pastikan data sudah benar
-                            </div>
-                            <button type="submit" class="btn btn-custom btn-success-custom">
-                                Daftar Sekarang <i class="bi bi-send-fill ms-2"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
 
-            </form>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-        function showEkskulSection() {
-            var nama = document.getElementById('inputNama').value;
-            if (nama.trim() == "") {
-                alert("Mohon isi nama lengkap terlebih dahulu!");
-                document.getElementById('inputNama').focus();
+        async function verifySiswa() {
+            const btn = document.getElementById('btnCheck');
+            const nisn = document.getElementById('nisn').value;
+            const nama = document.getElementById('nama').value;
+            const kelas = document.getElementById('kelas').value;
+
+            if (!nisn || !nama || !kelas) {
+                Swal.fire('Error', 'Harap lengkapi semua data diri!', 'error');
                 return;
             }
-            var section = document.getElementById('section-pilih-ekskul');
-            section.classList.add('show');
-            setTimeout(() => {
-                section.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'start'
+
+            btn.disabled = true;
+            btn.innerHTML = 'Memeriksa...';
+
+            try {
+                const response = await fetch("{{ route('check.siswa') }}", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content
+                    },
+                    body: JSON.stringify({
+                        nisn,
+                        nama,
+                        kelas
+                    })
                 });
-            }, 100);
+
+                const result = await response.json();
+
+                if (result.status === 'success') {
+                    // Success
+                    document.getElementById('step1-verify').style.display = 'none';
+                    document.getElementById('step2-ekskul').style.display =
+                    'block'; // Animasi fadeIn bisa ditambahkan css
+
+                    document.getElementById('verified_siswa_id').value = result.siswa_id;
+                    document.getElementById('greet_nama').innerText = nama;
+
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Data Ditemukan',
+                        text: 'Silakan lanjut memilih ekskul',
+                        timer: 1500,
+                        showConfirmButton: false
+                    });
+                } else {
+                    // Fail
+                    Swal.fire('Gagal', result.message, 'error');
+                    btn.disabled = false;
+                    btn.innerHTML = 'Cek Data Saya <i class="bi bi-arrow-right ms-2"></i>';
+                }
+            } catch (error) {
+                Swal.fire('Error', 'Terjadi kesalahan sistem', 'error');
+                btn.disabled = false;
+                btn.innerHTML = 'Cek Data Saya <i class="bi bi-arrow-right ms-2"></i>';
+            }
         }
 
-        function showSubmitButton() {
-            // 1. Munculkan bagian Alasan
-            var alasanSection = document.getElementById('section-alasan');
-            alasanSection.style.display = 'block';
+        // Add visual style for radio buttons
+        document.querySelectorAll('input[name="ekskul_id"]').forEach(input => {
+            input.addEventListener('change', function() {
+                // Reset icons
+                document.querySelectorAll('.check-icon').forEach(el => el.style.opacity = '0');
+                // Show selected icon
+                this.parentElement.querySelector('.check-icon').style.opacity = '1';
+            });
+        });
 
-            // 2. Munculkan Tombol Submit
-            var area = document.getElementById('btn-submit-area');
-            area.style.display = 'block';
-            setTimeout(() => area.classList.add('show'), 10);
-
-            // 3. Scroll otomatis ke bagian alasan agar user sadar ada input baru
-            setTimeout(() => {
-                alasanSection.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'center'
-                });
-            }, 100);
-        }
+        // SweetAlert untuk Flash Messages Laravel
+        @if (session('success'))
+            Swal.fire('Berhasil!', "{{ session('success') }}", 'success');
+        @endif
+        @if (session('error'))
+            Swal.fire('Gagal!', "{{ session('error') }}", 'error');
+        @endif
     </script>
 </body>
 

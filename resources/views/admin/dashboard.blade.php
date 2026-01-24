@@ -250,7 +250,7 @@
                     <i class="bi bi-people-fill"></i>
                 </div>
                 <div class="stat-title">Total Pendaftar</div>
-                <div class="stat-value">{{ \App\Models\Registrant::count() }}</div>
+                <div class="stat-value">{{ \App\Models\Siswa::count() }}</div>
                 <div class="stat-change">
                     <i class="bi bi-arrow-up"></i>
                     Siswa Terdaftar
@@ -265,7 +265,7 @@
                 </div>
                 <div class="stat-title">Rata-rata</div>
                 <div class="stat-value">
-                    {{ \App\Models\Ekskul::count() > 0 ? round(\App\Models\Registrant::count() / \App\Models\Ekskul::count(), 1) : 0 }}
+                    {{ \App\Models\Ekskul::count() > 0 ? round(\App\Models\Siswa::count() / \App\Models\Ekskul::count(), 1) : 0 }}
                 </div>
                 <div class="stat-change">
                     <i class="bi bi-arrow-up"></i>

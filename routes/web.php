@@ -4,37 +4,28 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\PublicController;
 use App\Http\Controllers\Admin\EkskulController;
-use App\Http\Controllers\Admin\SiswaController; // Pastikan controller ini sudah dibuat
+use App\Http\Controllers\Admin\SiswaController;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-*/
-
-// 1. Halaman Depan (Public/Siswa)
+// Halaman Depan
 Route::get('/', [PublicController::class, 'index'])->name('home');
 Route::post('/daftar', [PublicController::class, 'store'])->name('daftar.store');
+Route::post('/check-siswa', [PublicController::class, 'checkSiswa'])->name('check.siswa'); // Route baru AJAX
 
-// 2. Authentication Routes (Login, Logout, dll)
-// Baris ini PENTING untuk mengatasi error "Route [logout] not defined"
 Auth::routes(['register' => false]);
 
-// 3. Halaman Admin (Wajib Login)
+// Halaman Admin
 Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
-
-    // Dashboard
     Route::get('/dashboard', function () {
-        return view('admin.dashboard'); // Pastikan file view ini ada
+        return view('admin.dashboard');
     })->name('dashboard');
 
-    // CRUD Ekskul (Otomatis: index, create, store, edit, update, destroy)
     Route::resource('ekskul', EkskulController::class);
-
     Route::get('/ekskul/{id}/detail', [EkskulController::class, 'show'])->name('ekskul.show');
     Route::delete('/ekskul/{ekskulId}/siswa/{siswaId}', [EkskulController::class, 'removeSiswa'])->name('ekskul.removeSiswa');
 
-    // Manage Siswa
+    // Siswa Management
     Route::get('/siswa', [SiswaController::class, 'index'])->name('siswa.index');
+    Route::post('/siswa', [SiswaController::class, 'store'])->name('siswa.store'); // Create Manual
+    Route::post('/siswa/import', [SiswaController::class, 'import'])->name('siswa.import'); // Import Excel
     Route::delete('/siswa/{id}', [SiswaController::class, 'destroy'])->name('siswa.destroy');
 });

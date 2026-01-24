@@ -7,8 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 class Ekskul extends Model
 {
     protected $guarded = [];
-    public function registrants()
+
+    public function siswas()
     {
-        return $this->hasMany(Registrant::class);
+        return $this->belongsToMany(Siswa::class, 'ekskul_siswa')
+            ->withPivot('no_wa', 'created_at')
+            ->withTimestamps();
     }
 }
