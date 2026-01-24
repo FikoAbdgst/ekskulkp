@@ -4,6 +4,24 @@
 
 @section('content')
     <style>
+        /* --- UTILITIES UNTUK TEXT LIMIT (PENTING) --- */
+        /* Mencegah teks panjang tanpa spasi menjebol layout */
+        .text-break-safe {
+            word-wrap: break-word !important;
+            word-break: break-word !important;
+            overflow-wrap: break-word !important;
+            white-space: normal !important;
+        }
+
+        /* Membatasi teks maksimal 3 baris lalu titik-titik (...) */
+        .line-clamp-3 {
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
         /* --- Hero Header Section --- */
         .detail-header {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -84,17 +102,19 @@
             display: flex;
             flex-direction: column;
             gap: 20px;
-            min-width: 250px;
+            min-width: 200px;
+            /* Diperkecil agar lebih fleksibel */
         }
 
         .ekskul-icon-large {
-            width: 120px;
-            height: 120px;
+            width: 100px;
+            /* Ukuran responsive */
+            height: 100px;
             border-radius: 24px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 4rem;
+            font-size: 3.5rem;
             background: rgba(255, 255, 255, 0.95);
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
             transform: rotate(-5deg);
@@ -106,11 +126,13 @@
         }
 
         .ekskul-title h1 {
-            font-size: 2.5rem;
+            font-size: 2.2rem;
             font-weight: 800;
             line-height: 1.1;
             margin-bottom: 5px;
             text-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            word-break: break-word;
+            /* Mencegah judul panjang putus jelek */
         }
 
         .ekskul-badge {
@@ -133,6 +155,8 @@
             border-radius: 20px;
             padding: 25px 30px;
             backdrop-filter: blur(10px);
+            width: 100%;
+            /* Pastikan full width di dalam grid */
         }
 
         .info-label {
@@ -150,13 +174,17 @@
             font-size: 1.05rem;
             opacity: 0.95;
             margin-bottom: 24px;
+            /* Tambahan agar deskripsi panjang aman */
+            word-wrap: break-word;
+            max-width: 100%;
         }
 
         /* Meta Grid */
         .meta-grid {
             display: flex;
-            gap: 16px;
+            gap: 12px;
             flex-wrap: wrap;
+            /* Wajib wrap agar responsif */
             border-top: 1px solid rgba(255, 255, 255, 0.15);
             padding-top: 20px;
         }
@@ -164,17 +192,18 @@
         .meta-item {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
             background: rgba(255, 255, 255, 0.15);
-            padding: 10px 16px;
+            padding: 8px 14px;
             border-radius: 12px;
             font-weight: 600;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
+            white-space: nowrap;
+            /* Agar item meta tidak patah */
         }
 
         .meta-item i {
             color: #ffd700;
-            /* Gold accent */
             font-size: 1.1rem;
         }
 
@@ -184,6 +213,8 @@
             border-radius: 24px;
             box-shadow: 0 4px 25px rgba(0, 0, 0, 0.05);
             padding: 30px;
+            overflow: hidden;
+            /* Mencegah overflow container */
         }
 
         .section-header {
@@ -193,6 +224,9 @@
             margin-bottom: 25px;
             border-bottom: 2px solid #f1f5f9;
             padding-bottom: 20px;
+            flex-wrap: wrap;
+            /* Wrap judul di layar kecil */
+            gap: 15px;
         }
 
         .section-title {
@@ -211,14 +245,22 @@
             border-radius: 20px;
             font-size: 0.9rem;
             font-weight: 700;
+            white-space: nowrap;
         }
 
         /* Table Styles */
+        .table-responsive {
+            overflow-x: auto;
+            /* Scroll horizontal jika tabel terlalu lebar */
+            -webkit-overflow-scrolling: touch;
+        }
+
         .table-siswa {
             width: 100%;
             border-collapse: separate;
             border-spacing: 0 8px;
-            /* Row spacing */
+            min-width: 800px;
+            /* Minimal lebar agar tabel tidak penyet di mobile */
         }
 
         .table-siswa thead th {
@@ -240,14 +282,16 @@
         .table-siswa tbody tr:hover {
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-            z-index: 1;
             position: relative;
+            z-index: 5;
         }
 
         .table-siswa td {
             padding: 20px 24px;
             border-top: 1px solid #f1f5f9;
             border-bottom: 1px solid #f1f5f9;
+            vertical-align: middle;
+            /* Center vertical */
         }
 
         .table-siswa td:first-child {
@@ -273,6 +317,8 @@
             color: #64748b;
             font-weight: 700;
             margin-right: 15px;
+            flex-shrink: 0;
+            /* Avatar jangan mengecil */
         }
 
         .student-info {
@@ -286,71 +332,53 @@
             font-size: 1rem;
         }
 
-        .btn-remove-icon {
-            width: 36px;
-            height: 36px;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #ef4444;
-            background: #fef2f2;
-            border: 1px solid #fee2e2;
-            transition: all 0.2s;
-            cursor: pointer;
-        }
-
-        .btn-remove-icon:hover {
-            background: #ef4444;
-            color: white;
-            transform: scale(1.1);
-        }
-
-        /* Responsive */
+        /* Responsive Breakpoints */
         @media (max-width: 992px) {
             .header-grid {
                 grid-template-columns: 1fr;
+                /* Stack vertikal */
+                gap: 30px;
             }
 
             .header-identity {
                 flex-direction: row;
                 align-items: center;
-            }
-
-            .ekskul-icon-large {
-                width: 80px;
-                height: 80px;
-                font-size: 2.5rem;
-            }
-
-            .ekskul-title h1 {
-                font-size: 2rem;
+                gap: 20px;
             }
         }
 
         @media (max-width: 576px) {
+            .detail-header {
+                padding: 25px;
+                /* Kurangi padding di HP */
+            }
+
             .header-identity {
                 flex-direction: column;
+                /* Stack logo dan judul */
                 text-align: center;
             }
 
-            .detail-header {
-                padding: 24px;
+            .ekskul-title h1 {
+                font-size: 1.8rem;
+            }
+
+            .content-container {
+                padding: 20px;
             }
 
             .meta-grid {
-                flex-direction: column;
+                justify-content: center;
+                /* Center meta item di HP */
             }
         }
     </style>
 
-    {{-- Include overlay HTML (sama seperti sebelumnya, disembunyikan di bawah) --}}
-
-    {{-- Success Alert (sama) --}}
+    {{-- Success Alert --}}
     @if (session('success'))
-        <div class="alert-success" style="margin-bottom: 20px;">
-            <i class="bi bi-check-circle-fill"></i>
-            <span>{{ session('success') }}</span>
+        <div class="alert alert-success d-flex align-items-center mb-4" role="alert">
+            <i class="bi bi-check-circle-fill me-2"></i>
+            <div>{{ session('success') }}</div>
         </div>
     @endif
 
@@ -368,7 +396,11 @@
                 {{-- Left: Identity --}}
                 <div class="header-identity">
                     <div class="ekskul-icon-large" style="color: {{ $ekskul->warna }};">
-                        {{ $ekskul->icon }}
+                        @if (Str::startsWith($ekskul->icon, 'bi-'))
+                            <i class="bi {{ $ekskul->icon }}"></i>
+                        @else
+                            {{ $ekskul->icon }}
+                        @endif
                     </div>
                     <div class="ekskul-title">
                         <span class="ekskul-badge">Ekstrakurikuler</span>
@@ -379,8 +411,9 @@
                 {{-- Right: Integrated Description & Meta --}}
                 <div class="header-info-box">
                     <span class="info-label"><i class="bi bi-info-circle"></i> Tentang Ekskul</span>
-                    <div class="description-text">
-                        {{-- Fallback jika deskripsi kosong --}}
+
+                    {{-- FIX: Text Break Safe untuk deskripsi --}}
+                    <div class="description-text text-break-safe">
                         {{ $ekskul->deskripsi ?? 'Belum ada deskripsi untuk ekstrakurikuler ini.' }}
                     </div>
 
@@ -452,28 +485,31 @@
                                     </span>
                                 </td>
 
-                                <td>
-                                    <div
-                                        style="font-size: 0.9rem; color: #64748b; line-height: 1.5; max-height: 80px; overflow-y: auto;">
-                                        {{-- Tampilkan alasan, atau strip jika kosong --}}
-                                        {{ $siswa->alasan ?? '-' }}
+                                {{-- FIX: Kolom Alasan dengan Pembatasan Text --}}
+                                <td style="max-width: 300px; min-width: 200px;">
+                                    <div class="text-muted small fst-italic text-break-safe line-clamp-3">
+                                        "{{ $siswa->pivot->alasan ?? 'Tidak ada alasan' }}"
                                     </div>
                                 </td>
 
                                 <td>
-                                    @if ($siswa->no_wa)
-                                        <a href="https://wa.me/{{ $siswa->no_wa }}" target="_blank"
-                                            style="text-decoration: none; color: #059669; font-weight: 600; display: inline-flex; align-items: center; gap: 6px;">
-                                            <i class="bi bi-whatsapp"></i> {{ $siswa->no_wa }}
+                                    @php
+                                        $wa = $siswa->pivot->no_wa ?? ($siswa->no_hp ?? '-');
+                                    @endphp
+                                    @if ($wa != '-' && $wa)
+                                        <a href="https://wa.me/62{{ ltrim($wa, '0') }}" target="_blank"
+                                            class="text-decoration-none text-success fw-bold">
+                                            <i class="bi bi-whatsapp me-1"></i> {{ $wa }}
                                         </a>
                                     @else
-                                        <span style="color: #94a3b8;">-</span>
+                                        -
                                     @endif
                                 </td>
-                                <td align="center">
-                                    <button type="button" class="btn-remove-icon" title="Hapus Siswa"
+                                <td class="text-center">
+                                    {{-- Menggunakan Javascript Modal untuk Delete --}}
+                                    <button type="button" class="btn btn-outline-danger btn-sm" title="Keluarkan"
                                         onclick="showConfirmDelete('{{ $siswa->id }}', '{{ $siswa->nama_siswa }}', '{{ $ekskul->id }}')">
-                                        <i class="bi bi-trash3"></i>
+                                        <i class="bi bi-person-x-fill"></i>
                                     </button>
                                 </td>
                             </tr>
@@ -489,7 +525,6 @@
         @endif
     </div>
 
-    {{-- Include Confirmation Modal CSS/HTML from previous code here (kept same) --}}
     {{-- Custom Confirmation Modal HTML --}}
     <div class="custom-confirm-overlay" id="confirmOverlay">
         <div class="custom-confirm-box">
@@ -510,9 +545,8 @@
         </div>
     </div>
 
-    {{-- CSS for Modal & Script (Copy yang lama/tambahkan style modal di <style> jika belum ada) --}}
     <style>
-        /* CSS Modal (Singkat) */
+        /* CSS Modal */
         .custom-confirm-overlay {
             display: none;
             position: fixed;

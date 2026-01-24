@@ -60,18 +60,19 @@ class EkskulController extends Controller
     }
     public function show($id)
     {
+        // Load ekskul beserta siswa yang terdaftar
         $ekskul = Ekskul::with('siswas')->findOrFail($id);
         return view('admin.ekskul.show', compact('ekskul'));
     }
 
+    // Fungsi untuk mengeluarkan siswa dari ekskul
     public function removeSiswa($ekskulId, $siswaId)
     {
-        $siswa = Siswa::where('id', $siswaId)
-            ->where('ekskul_id', $ekskulId)
-            ->firstOrFail();
+        $ekskul = Ekskul::findOrFail($ekskulId);
 
-        $siswa->delete();
+        // Detach: Hapus hubungan di tabel pivot saja
+        $ekskul->siswas()->detach($siswaId);
 
-        return back()->with('success', 'Siswa berhasil dihapus dari ekskul!');
+        return back()->with('success', 'Siswa berhasil dikeluarkan dari ekskul ini.');
     }
 }
