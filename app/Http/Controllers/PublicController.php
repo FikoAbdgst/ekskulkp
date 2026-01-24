@@ -20,6 +20,7 @@ class PublicController extends Controller
             'kelas' => 'required',
             'no_wa' => 'required',
             'ekskul_id' => 'required|exists:ekskuls,id',
+            'alasan' => 'required|string', // <--- Tambahkan Validasi Ini
         ]);
 
         Registrant::create($request->all());

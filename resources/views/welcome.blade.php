@@ -312,7 +312,8 @@
         </div>
 
         <div class="container pb-5 mb-5">
-            <form action="#" method="POST">
+            <form action="{{ route('daftar.store') }}" method="POST">
+                @csrf
                 <div class="row justify-content-center">
                     <div class="col-lg-8 col-md-10">
                         <div class="form-card">
@@ -429,6 +430,28 @@
                     </div>
                 </div>
 
+                <div id="section-alasan" style="display: none;">
+                    <div class="container mt-4 mb-5 pb-5">
+                        <div class="row justify-content-center">
+                            <div class="col-lg-8 col-md-10">
+                                <div class="form-card" style="border-top: 4px solid var(--success);">
+                                    <div class="section-header">
+                                        <div class="step-badge" style="background: var(--success);">
+                                            <i class="bi bi-chat-quote-fill"></i> Langkah 3
+                                        </div>
+                                        <h3>Motivasi Kamu</h3>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="form-label fw-bold">Mengapa kamu ingin masuk ekskul ini?</label>
+                                        <textarea name="alasan" class="form-control" rows="4"
+                                            placeholder="Ceritakan alasan atau motivasimu disini..." required></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div id="btn-submit-area">
                     <div class="container">
                         <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
@@ -466,9 +489,22 @@
         }
 
         function showSubmitButton() {
+            // 1. Munculkan bagian Alasan
+            var alasanSection = document.getElementById('section-alasan');
+            alasanSection.style.display = 'block';
+
+            // 2. Munculkan Tombol Submit
             var area = document.getElementById('btn-submit-area');
             area.style.display = 'block';
             setTimeout(() => area.classList.add('show'), 10);
+
+            // 3. Scroll otomatis ke bagian alasan agar user sadar ada input baru
+            setTimeout(() => {
+                alasanSection.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'center'
+                });
+            }, 100);
         }
     </script>
 </body>

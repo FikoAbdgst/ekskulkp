@@ -13,16 +13,16 @@ return new class extends Migration
             $table->string('nama');
             $table->text('deskripsi');
             $table->string('gambar')->nullable();
+            $table->string('icon')->default('bi-stars');
+            $table->string('warna')->default('#6366f1');
 
-            // Kolom Baru
-            $table->string('icon')->default('bi-stars'); // Menyimpan class icon (contoh: bi-basket)
-            $table->string('warna')->default('#6366f1'); // Menyimpan kode hex warna
-            $table->string('hari'); // Contoh: Senin
-            $table->time('jam_mulai'); // Contoh: 15:00
-            $table->time('jam_selesai'); // Contoh: 17:00
+            // --- TAMBAHAN BARU ---
+            $table->string('penanggung_jawab'); // Nama Guru/Pelatih
+            // ---------------------
 
-            // Kolom 'jadwal' dihapus karena sudah dipecah
-
+            $table->string('hari');
+            $table->time('jam_mulai');
+            $table->time('jam_selesai');
             $table->timestamps();
         });
     }

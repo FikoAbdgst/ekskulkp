@@ -386,6 +386,10 @@
 
                     <div class="meta-grid">
                         <div class="meta-item">
+                            <i class="bi bi-person-badge-fill"></i>
+                            <span>{{ $ekskul->penanggung_jawab }}</span>
+                        </div>
+                        <div class="meta-item">
                             <i class="bi bi-calendar-week-fill"></i>
                             <span>{{ $ekskul->hari }}</span>
                         </div>
@@ -422,10 +426,11 @@
                     <thead>
                         <tr>
                             <th width="5%">No</th>
-                            <th width="35%">Nama Siswa</th>
-                            <th width="20%">Kelas</th>
-                            <th width="25%">Kontak (WA)</th>
-                            <th width="15%" class="text-center">Aksi</th>
+                            <th width="25%">Nama Siswa</th>
+                            <th width="15%">Kelas</th>
+                            <th width="30%">Alasan / Motivasi</th>
+                            <th width="15%">Kontak</th>
+                            <th width="10%" class="text-center">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -446,6 +451,15 @@
                                         {{ $siswa->kelas }}
                                     </span>
                                 </td>
+
+                                <td>
+                                    <div
+                                        style="font-size: 0.9rem; color: #64748b; line-height: 1.5; max-height: 80px; overflow-y: auto;">
+                                        {{-- Tampilkan alasan, atau strip jika kosong --}}
+                                        {{ $siswa->alasan ?? '-' }}
+                                    </div>
+                                </td>
+
                                 <td>
                                     @if ($siswa->no_wa)
                                         <a href="https://wa.me/{{ $siswa->no_wa }}" target="_blank"

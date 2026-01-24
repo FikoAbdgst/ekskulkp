@@ -21,6 +21,7 @@ class EkskulController extends Controller
     {
         $request->validate([
             'nama' => 'required',
+            'penanggung_jawab' => 'required', // <--- Tambahkan ini
             'deskripsi' => 'required',
             'icon' => 'required',
             'warna' => 'required',
@@ -33,13 +34,12 @@ class EkskulController extends Controller
         return back()->with('success', 'Ekskul berhasil ditambahkan!');
     }
 
-    // Method edit() DIHAPUS saja karena sudah pakai Modal
-
     public function update(Request $request, $id)
     {
         $ekskul = Ekskul::findOrFail($id);
         $request->validate([
             'nama' => 'required',
+            'penanggung_jawab' => 'required', // <--- Tambahkan ini
             'deskripsi' => 'required',
             'icon' => 'required',
             'warna' => 'required',

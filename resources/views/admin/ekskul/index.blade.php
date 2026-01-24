@@ -397,6 +397,12 @@
                                     placeholder="Contoh: Basket">
                             </div>
 
+                            <div class="mb-3">
+                                <label class="form-label">Penanggung Jawab (Guru/Pelatih)</label>
+                                <input type="text" name="penanggung_jawab" id="inputPJ" class="form-control" required
+                                    placeholder="Contoh: Bpk. Budi Santoso">
+                            </div>
+
                             {{-- PILIH ICON (Floating Dropdown) --}}
                             <div class="mb-3">
                                 <label class="form-label">Pilih Icon</label>
@@ -514,6 +520,7 @@
         // Input Elements
         const inputs = {
             nama: document.getElementById('inputNama'),
+            pj: document.getElementById('inputPJ'),
             iconHidden: document.getElementById('inputIconHidden'),
             warna: document.getElementById('inputWarna'),
             hari: document.getElementById('inputHari'),
@@ -589,6 +596,7 @@
 
                 // Isi input dengan data
                 inputs.nama.value = data.nama;
+                inputs.pj.value = data.penanggung_jawab; // <--- Tambahkan baris ini
                 inputs.warna.value = data.warna;
                 inputs.hari.value = data.hari;
                 inputs.mulai.value = data.jam_mulai;

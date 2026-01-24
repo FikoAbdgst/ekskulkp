@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('nisn');
             $table->string('no_wa');
             $table->foreignId('ekskul_id')->constrained('ekskuls')->onDelete('cascade');
+            $table->text('alasan'); // <--- Tambahkan Baris Ini
             $table->timestamps();
         });
     }
