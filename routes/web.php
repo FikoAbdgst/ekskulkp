@@ -28,4 +28,6 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::post('/siswa', [SiswaController::class, 'store'])->name('siswa.store'); // Create Manual
     Route::post('/siswa/import', [SiswaController::class, 'import'])->name('siswa.import'); // Import Excel
     Route::delete('/siswa/{id}', [SiswaController::class, 'destroy'])->name('siswa.destroy');
+
+    Route::get('admin/siswa/template', [SiswaController::class, 'downloadTemplate'])->name('siswa.template');
 });

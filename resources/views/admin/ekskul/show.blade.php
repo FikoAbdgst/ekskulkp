@@ -400,7 +400,7 @@
                         </div>
                         <div class="meta-item">
                             <i class="bi bi-people-fill"></i>
-                            <span>{{ $ekskul->registrants->count() }} Anggota</span>
+                            <span>{{ $ekskul->siswas->count() }} Anggota</span>
                         </div>
                     </div>
                 </div>
@@ -416,11 +416,11 @@
                 Daftar Siswa
             </h2>
             <div class="count-badge">
-                Total: {{ $ekskul->registrants->count() }}
+                Total: {{ $ekskul->siswas->count() }}
             </div>
         </div>
 
-        @if ($ekskul->registrants->count() > 0)
+        @if ($ekskul->siswas->count() > 0)
             <div class="table-responsive">
                 <table class="table-siswa">
                     <thead>
@@ -434,7 +434,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($ekskul->registrants as $index => $siswa)
+                        @foreach ($ekskul->siswas as $index => $siswa)
                             <tr>
                                 <td>{{ $index + 1 }}</td>
                                 <td>

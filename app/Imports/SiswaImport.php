@@ -15,13 +15,20 @@ class SiswaImport implements ToModel, WithHeadingRow
      */
     public function model(array $row)
     {
-        // Pastikan nama kolom di Excel Anda: 'nisn', 'nama', 'kelas' (huruf kecil semua)
-        // Logic: Update jika ada, Create jika belum ada
+        // Pastikan header di Excel Anda adalah: 'nisn', 'nama', 'kelas'
+
+        // 1. Validasi sederhana: jika nisn kosong, skip
+        if (!isset($row['nisn']) || empty($row['nisn'])) {
+            return null;
+        }
+
+        // 2. Simpan / Update data
         return Siswa::updateOrCreate(
-            ['nisn' => $row['nisn']], // Kunci pencarian (NISN)
+            ['nisn' => $row['nisn']], // Cek berdasarkan NISN
             [
-                'nama_siswa'    => $row['nama'], // Update nama
-                'kelas'         => $row['kelas'], // Update kelas
+                'nama_siswa'    => $row['nama'],
+                // Ambil kelas dari excel, jika kosong isi '-'
+                'kelas'         => $row['kelas'] ?? '-',
             ]
         );
     }

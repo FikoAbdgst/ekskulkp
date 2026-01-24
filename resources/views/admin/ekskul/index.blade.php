@@ -330,7 +330,6 @@
                                     </div>
                                     <div>
                                         <strong style="font-size: 1.05rem; display:block;">{{ $ekskul->nama }}</strong>
-                                        <small class="text-muted">Ekskul Sekolah</small>
                                     </div>
                                 </div>
                             </td>

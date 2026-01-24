@@ -46,7 +46,7 @@
                                 Data Siswa Pendaftar
                             </div>
                             <div class="card-body">
-                                @if ($registrants->count() > 0)
+                                @if ($siswas->count() > 0)
                                     <div class="table-responsive">
                                         <table class="table table-hover table-bordered">
                                             <thead class="table-light">
@@ -60,7 +60,7 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                @foreach ($registrants as $key => $data)
+                                                @foreach ($siswas as $key => $data)
                                                     <tr>
                                                         <td>{{ $key + 1 }}</td>
                                                         <td class="fw-bold">{{ $data->nama_siswa }}</td>

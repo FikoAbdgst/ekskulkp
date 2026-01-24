@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Ekskul;
 use App\Models\Registrant;
+use App\Models\Siswa;
 
 class EkskulController extends Controller
 {
@@ -59,13 +60,13 @@ class EkskulController extends Controller
     }
     public function show($id)
     {
-        $ekskul = Ekskul::with('registrants')->findOrFail($id);
+        $ekskul = Ekskul::with('siswas')->findOrFail($id);
         return view('admin.ekskul.show', compact('ekskul'));
     }
 
     public function removeSiswa($ekskulId, $siswaId)
     {
-        $siswa = Registrant::where('id', $siswaId)
+        $siswa = Siswa::where('id', $siswaId)
             ->where('ekskul_id', $ekskulId)
             ->firstOrFail();
 

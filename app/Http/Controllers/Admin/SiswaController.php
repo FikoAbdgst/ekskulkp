@@ -10,11 +10,41 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class SiswaController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        // Ambil data siswa dengan pagination (10 per halaman)
-        $siswas = Siswa::latest()->paginate(10);
-        return view('admin.siswa.index', compact('siswas'));
+        $query = Siswa::query();
+
+        // Search functionality
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('nama_siswa', 'LIKE', "%{$search}%")
+                    ->orWhere('nisn', 'LIKE', "%{$search}%")
+                    ->orWhere('kelas', 'LIKE', "%{$search}%");
+            });
+        }
+
+        // Filter by kelas
+        if ($request->filled('kelas')) {
+            $query->where('kelas', $request->kelas);
+        }
+
+        // Sorting
+        $sortBy = $request->get('sort_by', 'created_at');
+        $sortOrder = $request->get('sort_order', 'desc');
+
+        if (in_array($sortBy, ['nama_siswa', 'nisn', 'kelas', 'created_at'])) {
+            $query->orderBy($sortBy, $sortOrder);
+        }
+
+        // Pagination with per_page option
+        $perPage = $request->get('per_page', 10);
+        $siswas = $query->paginate($perPage)->withQueryString();
+
+        // Get unique kelas for filter dropdown
+        $kelasList = Siswa::distinct()->pluck('kelas')->sort();
+
+        return view('admin.siswa.index', compact('siswas', 'kelasList'));
     }
 
     public function import(Request $request)
@@ -33,7 +63,6 @@ class SiswaController extends Controller
 
     public function store(Request $request)
     {
-        // Fitur tambah manual (opsional jika admin ingin nambah satu-satu)
         $request->validate([
             'nama_siswa' => 'required',
             'nisn' => 'required|unique:siswas,nisn',
@@ -48,5 +77,25 @@ class SiswaController extends Controller
     {
         Siswa::findOrFail($id)->delete();
         return back()->with('success', 'Data siswa berhasil dihapus');
+    }
+
+    public function downloadTemplate()
+    {
+        $data = [
+            ['nisn', 'nama', 'kelas'],
+            ['1234567890', 'Contoh Siswa', 'X RPL 1']
+        ];
+
+        return Excel::download(new class($data) implements \Maatwebsite\Excel\Concerns\FromArray {
+            protected $data;
+            public function __construct(array $data)
+            {
+                $this->data = $data;
+            }
+            public function array(): array
+            {
+                return $this->data;
+            }
+        }, 'template_siswa.xlsx');
     }
 }
