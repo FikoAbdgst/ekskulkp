@@ -221,7 +221,10 @@
 
     <div class="hero">
         <div class="container">
-            <h1 class="fw-bold">🎓 Pendaftaran Ekskul</h1>
+            <h1 class="fw-bold">
+                <img src="{{ asset('images/logo-smkagung.png') }}" alt="Logo" style="width: 100px; height: 110px;">
+                Pendaftaran Ekskul
+            </h1>
             <p class="opacity-90">Tahun Ajaran 2025/2026</p>
         </div>
     </div>

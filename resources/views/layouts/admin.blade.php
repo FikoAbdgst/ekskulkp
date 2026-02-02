@@ -298,7 +298,7 @@
             <div class="sidebar-header">
                 <h4>
                     <span class="logo-icon">
-                        <i class="bi bi-shield-check"></i>
+                        <img src="{{ asset('images/logo-smkagung.png') }}" alt="Logo" class="logo-icon">
                     </span>
                     Admin Panel
                 </h4>
